@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        html,
+body,
+#googleMap {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  padding: 0px
+}
+    </style>
+    </head>
+<body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=puthereyourAPI&callback=initMap"></script>
+<input type="file" name="file" id="file" onchange="handle_files(this.files)" />
+<div id="googleMap"></div>
+    <script type="text/javascript">
+        var map;
+
+function getCoor() {
+  return coordinates;
+}
+
+function handle_files(files) {
+  for (i = 0; i < files.length; i++) {
+    file = files[i];
+    console.log(file);
+    var reader = new FileReader();
+    ret = [];
+    reader.onload = function(e) {
+      console.log(e.target.result);
+      var lines = e.target.result.split('\n');
+      var bounds = new google.maps.LatLngBounds();
+      for (var line = 0; line < lines.length; line++) {
+
+        var point = lines[line].split(',');
+
+        var count = 0;
+        var coordinates = [];
+        for (var dua = 0; dua < point.length; dua++) {
+          if (dua % 2 == 0) {
+            var latitude = point[dua];
+          } else {
+            var longitude = point[dua];
+            coordinates[count] = new google.maps.LatLng(latitude/10000, longitude/10000);
+            console.log(coordinates[count]);
+            count++;
+          }
+        }
+        var myTrip = [];
+        for (var c = 0; c < coordinates.length; c++) {
+          myTrip.push(coordinates[c]);
+          bounds.extend(coordinates[c]);
+        }
+        map.fitBounds(bounds);
+
+        //console.log(myTrip);
+        var flightPath = new google.maps.Polyline({
+          path: myTrip,
+          strokeColor: "#0000FF",
+          strokeOpacity: 0.8,
+          strokeWeight: 8
+        });
+
+        flightPath.setMap(map);
+
+      }
+
+    }
+    reader.onerror = function(stuff) {
+      console.log("error", stuff);
+      console.log(stuff.getMessage());
+    }
+    reader.readAsText(file); //readAsdataURL
+  }
+
+}
+
+function initialize() {
+
+  var mapProp = {
+
+    center: new google.maps.LatLng(49.521911, 16.246056),
+    zoom: 6,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</body>
+</html>
