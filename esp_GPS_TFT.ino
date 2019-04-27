@@ -88,7 +88,7 @@ void loop(void) {
   getGPS();  //Calling function getGPS - getting values from GPS
   tft.setTextColor(WHITE,RED);
   tft.setCursor(18,50);
-  tft.print(LAT,5); //1000000
+  tft.print(LAT,5);
   tft.setCursor(133,50);
   tft.print(LON,5);
   tft.setTextColor(WHITE,BLUE); 
@@ -108,9 +108,9 @@ void loop(void) {
   dataString += ",";
   dataString += "City";
   dataString += ",";
-  double latt = (LAT/100);
+  double latt = LAT*1000; //Multiplication of variable for web application
   dataString += String(latt);
-  double lonn = (LON/100);
+  double lonn = LON*1000;
   dataString += ",";
   dataString += String(lonn);
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
@@ -143,7 +143,7 @@ void getGPS(){
       SAT = gps.satellites.value();
       ALT = gps.altitude.meters();      
       AGE = gps.location.age();
-      TIME = gps.time.hour()+1;
+      TIME = gps.time.hour()+2; //Value of constant depends on time
       TIME += ":";
       TIME += gps.time.minute();
       feedgps(); 
