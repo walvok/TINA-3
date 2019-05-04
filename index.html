@@ -44,7 +44,7 @@ function handle_files(files) {
             var latitude = point[dua];
           } else {
             var longitude = point[dua];
-            coordinates[count] = new google.maps.LatLng(latitude/10000, longitude/10000);
+            coordinates[count] = new google.maps.LatLng(latitude/1000, longitude/1000);
             console.log(coordinates[count]);
             count++;
           }
